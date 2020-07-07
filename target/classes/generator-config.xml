@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!-- 数据库驱动:换成你本地的驱动包位置 -->
+	<!-- <classPathEntry location="D:\7_Repository\mysql\mysql-connector-java\8.0.15\mysql-connector-java-8.0.15.jar" 
+		/> -->
+	<properties resource="db.properties" />
+
+	<!-- 不生成和Example查询有关的内容 -->
+	<context id="MySql" targetRuntime="MyBatis3Simple"
+		defaultModelType="flat">
+		<!-- 注意：<context>的子元素，有严格的配置顺序！ -->
+		<!-- <property> (0个或多个) -->
+		<!-- <plugin> (0个或多个) -->
+		<!-- <commentGenerator> (0个或1个) -->
+		<!-- <jdbcConnection> (1个) -->
+		<!-- <javaTypeResolver> (0个或1个) -->
+		<!-- <javaModelGenerator> (1个) -->
+		<!-- <sqlMapGenerator> (0个或1个) -->
+		<!-- <javaClientGenerator> (0个或1个) -->
+		<!-- <table> (1个或多个) -->
+
+		<property name="beginningDelimiter" value="`" />
+		<property name="endingDelimiter" value="`" />
+		<property name="javaFileEncoding" value="UTF-8" />
+
+		<!-- 为模型生成序列化方法 -->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+		<!-- 为生成的Java模型创建一个toString方法 -->
+		<plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+
+		<!--生成mapper.xml时覆盖原文件 -->
+		<plugin
+			type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+
+		<!-- 解决Mybatis generator mapper文件重新生成不会覆盖原文件的问题 -->
+		<!-- <plugin type="com.ctgu.mbg.OverIsMergeablePlugin" /> -->
+
+		<!--可以自定义生成model的代码注释 -->
+		<commentGenerator
+			type="com.ctgu.common.generator.CommentGenerator">
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+			<property name="suppressDate" value="true" />
+			<property name="addRemarkComments" value="true" />
+		</commentGenerator>
+
+		<!--配置数据库连接 -->
+		<jdbcConnection driverClass="${jdbc.driverClass}"
+			connectionURL="${jdbc.connectionURL}" userId="${jdbc.username}"
+			password="${jdbc.password}">
+			<!--解决mysql驱动升级到8.0后不生成指定数据库代码的问题 -->
+			<property name="nullCatalogMeansCurrent" value="true" />
+		</jdbcConnection>
+		<!-- <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/db_test?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true" 
+			userId="root" password="root"> </jdbcConnection> -->
+
+		<!-- 这个元素的配置用来指定JDBC类型和Java类型如何转换，默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 
+			Integer，为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<!-- forceBigDecimals属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。 
+				默认情况下的转换规则为： -->
+			<!-- 如果精度>0或者长度>18，就会使用java.math.BigDecimal -->
+			<!-- 如果精度=0并且10<=长度<=18，就会使用java.lang.Long -->
+			<!-- 如果精度=0并且5<=长度<=9，就会使用java.lang.Integer -->
+			<!-- 如果精度=0并且长度<5，就会使用java.lang.Short -->
+			<!-- 如果设置为true，那么一定会使用java.math.BigDecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!--指定生成model的路径，该元素必须配置一个，并且最多一个 -->
+		<javaModelGenerator
+			targetPackage="com.ctgu.mbg.model"
+			targetProject="mall-oauth2/src/main/java" />
+
+		<!--指定生成mapper.xml的路径 -->
+		<sqlMapGenerator targetPackage="com.ctgu.mbg.mapper"
+			targetProject="mall-oauth2/src/main/resources" />
+
+		<!--指定生成mapper接口的的路径 -->
+		<!-- javaClientGenerator的type属性用于选择一个预定义的客户端代码（可以理解为Mapper接口）生成器，用户可以自定义实现， -->
+		<!-- 需要继承org.mybatis.generator.codegen.AbstractJavaClientGenerator类，必选有一个默认的构造方法。 -->
+		<!-- 该属性提供了以下预定的代码生成器， -->
+		<!-- 根据<context>的targetRuntime分成三类： -->
+		<!-- （1）MyBatis3 -->
+		<!-- ANNOTATEDMAPPER:基于注解的Mapper接口，不会有对应的XML映射文件 -->
+		<!-- MIXEDMAPPER:XML和注解的混合形式，(上面这种情况中的)SqlProvider注解方法会被XML替代。 -->
+		<!-- XMLMAPPER:所有的方法都在XML中，接口调用依赖XML文件。 -->
+		<!-- （2）MyBatis3Simple -->
+		<!-- ANNOTATEDMAPPER:基于注解的Mapper接口，不会有对应的XML映射文件 -->
+		<!-- XMLMAPPER:所有的方法都在XML中，接口调用依赖XML文件。 -->
+		<!-- （3）Ibatis2Java2或Ibatis2Java5 -->
+		<!-- IBATIS:生成的对象符合iBATIS的DAO框架（不建议使用）。 -->
+		<!-- GENERIC-CI:生成的对象将只依赖于SqlMapClient，通过构造方法注入。 -->
+		<!-- GENERIC-SI:生成的对象将只依赖于SqlMapClient，通过setter方法注入。 -->
+		<!-- SPRING:生成的对象符合Spring的DAO接口 -->
+		<!-- targetPackage:生成实体类存放的包名，一般就是放在该包下。实际还会受到其他配置的影响 -->
+		<!-- targetProject:指定目标项目路径，使用的是文件系统的绝对路径。 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.ctgu.mbg.mapper"
+			targetProject="mall-oauth2/src/main/java" />
+
+		<!-- tableName：指定要生成的表名，可以使用SQL通配符匹配多个表。 -->
+		<!-- 例如要生成全部的表，可以按如下配置：<table tableName="%" /> -->
+		<!-- -->
+		<!--后台管理员表 -->
+		<!-- <table tableName="t_admin"> <generatedKey column="id" sqlStatement="MySql" 
+			identity="true" /> </table> -->
+
+		<!--后台用户表 -->
+<!-- 		<table tableName="t_user">
+			<generatedKey column="id" sqlStatement="MySql"
+				identity="true" />
+		</table> -->
+		<table tableName="t_role">
+			<generatedKey column="id" sqlStatement="MySql"
+				identity="true" />
+		</table>
+
+	</context>
+</generatorConfiguration>
